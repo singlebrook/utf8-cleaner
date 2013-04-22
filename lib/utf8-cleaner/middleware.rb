@@ -18,6 +18,8 @@ module UTF8Cleaner
      @app.call(sanitize_env(env))
     end
 
+    private
+
     def sanitize_env(env)
      SANITIZE_ENV_KEYS.each do |key|
        next unless value = env[key]
@@ -33,19 +35,22 @@ module UTF8Cleaner
     end
 
     def sanitize_string(string)
-     return string unless string.is_a? String
+      return string unless string.is_a? String
 
-     # Try it as UTF-8 directly
-     cleaned = string.dup.force_encoding('UTF-8')
-     if cleaned.valid_encoding?
-       cleaned
-     else
-       # Some of it might be old Windows code page
-       string.encode(Encoding::UTF_8, Encoding::Windows_1250)
-     end
+      # Try it as UTF-8 directly
+      cleaned = string.dup.force_encoding('UTF-8')
+      if cleaned.valid_encoding?
+        cleaned
+      else
+        utf8clean(string)
+      end
     rescue EncodingError
-     # Force it to UTF-8, throwing out invalid bits
-     string.encode('UTF-16', 'UTF-8', :invalid => :replace, :replace => '').encode('UTF-8', 'UTF-16')
+      utf8clean(string)
+    end
+
+    def utf8clean(string)
+      # Force it to UTF-8, throwing out invalid bits
+      string.encode('UTF-16', 'UTF-8', :invalid => :replace, :replace => '').encode('UTF-8', 'UTF-16')
     end
   end
 end

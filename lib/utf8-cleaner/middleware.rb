@@ -1,3 +1,5 @@
+require 'iconv' unless RUBY_VERSION >= "1.9.3"
+
 module UTF8Cleaner
   class Middleware
 
@@ -50,7 +52,12 @@ module UTF8Cleaner
 
     def utf8clean(string)
       # Force it to UTF-8, throwing out invalid bits
-      string.encode('UTF-16', 'UTF-8', :invalid => :replace, :replace => '').encode('UTF-8', 'UTF-16')
+      if RUBY_VERSION >= "1.9.3"
+        # Iconv is deprecated in 1.9.3, so use built-in String#encode
+        string.encode('UTF-16', 'UTF-8', :invalid => :replace, :replace => '').encode('UTF-8', 'UTF-16')
+      else
+        Iconv.conv('UTF-8//IGNORE', 'UTF-8', string)
+      end
     end
   end
 end

@@ -5,12 +5,12 @@ require 'utf8-cleaner/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "utf8-cleaner"
-  gem.version       = Utf8::Cleaner::VERSION
+  gem.version       = UTF8Cleaner::VERSION
   gem.authors       = ["Leon Miller-Out"]
   gem.email         = ["leon@singlebrook.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{Removes invalid UTF8 characters from the URL and other env vars}
+  gem.summary       = %q{Prevent annoying error reports of "invalid byte sequence in UTF-8"}
+  gem.homepage      = "https://github.com/singlebrook/utf8-cleaner"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }

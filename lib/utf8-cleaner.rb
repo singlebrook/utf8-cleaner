@@ -1,7 +1,3 @@
 require "utf8-cleaner/version"
-
-module Utf8
-  module Cleaner
-    # Your code goes here...
-  end
-end
+require "utf8-cleaner/middleware"
+require "utf8-cleaner/railtie" if defined? Rails

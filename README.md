@@ -1,6 +1,7 @@
-# Utf8::Cleaner
+# UTF8Cleaner
 
-TODO: Write a gem description
+Removes invalid UTF-8 characters from the environment so that your app doesn't choke
+on them. This prevents errors like "invalid byte sequence in UTF-8".
 
 ## Installation
 
@@ -15,6 +16,11 @@ And then execute:
 Or install it yourself as:
 
     $ gem install utf8-cleaner
+
+If you're not running Rails, you'll have to add the middleware to your config.ru:
+
+    require 'uf8-cleaner'
+    use UTF8Cleaner::Middleware
 
 ## Usage
 

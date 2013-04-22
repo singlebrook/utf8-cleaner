@@ -24,7 +24,7 @@ If you're not running Rails, you'll have to add the middleware to your config.ru
 
 ## Usage
 
-TODO: Write usage instructions here
+There's nothing to "use". It just works!
 
 ## Contributing
 
@@ -33,3 +33,9 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Credits
+
+Original middleware author: @phoet - https://gist.github.com/phoet/1336754
+
+Ruby 1.9.3 compatibility: @pithyless - https://gist.github.com/pithyless/3639014

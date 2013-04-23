@@ -2,7 +2,6 @@ module UTF8Cleaner
   class Middleware
 
     SANITIZE_ENV_KEYS = [
-     "HTTP_COOKIE",     # bad cookie encodings kill rack: https://github.com/rack/rack/issues/225
      "HTTP_REFERER",
      "PATH_INFO",
      "QUERY_STRING",

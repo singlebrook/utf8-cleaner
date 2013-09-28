@@ -2,6 +2,7 @@ require 'rubygems'
 require 'rspec/autorun'
 
 require 'utf8-cleaner'
+require 'uri'
 
 RSpec.configure do |config|
   # Run specs in random order to surface order dependencies. If you find an

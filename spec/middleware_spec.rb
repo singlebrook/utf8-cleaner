@@ -30,4 +30,9 @@ describe 'UTF8Cleaner::Middleware' do
   it "handles an awful URL" do
     new_env['HTTP_REFERER'].should == 'http://example.com/blog+Result:+++++'
   end
+  
+  it "reencodes ampersands and semicolons" do
+    result = UTF8Cleaner::Middleware.new(nil).send(:sanitize_env, env.merge('QUERY_STRING' => 'foo%26bar%3Bbaz'))
+    result['QUERY_STRING'].should == 'foo%26bar%3Bbaz'
+  end
 end

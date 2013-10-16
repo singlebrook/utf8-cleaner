@@ -20,56 +20,69 @@ module UTF8Cleaner
 
     private
 
+    # Returns an array of valid URI-encoded UTF-8 characters.
     def encoded_char_array
-      pct = '%'
       skip_next = 0
       index = -1
       char_array = []
+
       data.chars.each do |char|
         index += 1
         if skip_next > 0
           skip_next -= 1
           next
         end
-        if char == pct
+        if char == '%'
+          # Skip the next two characters, which are the encoded byte
+          # indicates by this %. (We'll change this later for multibyte characters.)
+          skip_next = 2
+
+          # How long is this character?
           first_byte = '0x' + (data.chars[index + 1] + data.chars[index + 2]).upcase
           bytes = utf8_char_length_in_bytes(first_byte)
 
-          valid_num_bytes = true
-          if data.chars.length < index + (3 * bytes)
-            valid_num_bytes = false
-          else
-            utf8_char_encoded_bytes = bytes.times.map do |n|
-              pct_index = index + (3 * n)
-              if data.chars[pct_index] == '%'
-                byte = data.chars[pct_index + 1..pct_index + 2].join('')
-              else
-                valid_num_bytes = false
-                break
-              end
-              pct + byte
-            end
-          end
+          # Grab the specified number of encoded bytes
+          utf8_char_encoded_bytes = next_n_bytes_from(index, bytes)
 
-          if valid_num_bytes
+          # Did we get the right number of bytes?
+          if utf8_char_encoded_bytes.length == bytes
+
+            # We did. Is it a valid character?
             utf8_char_encoded = utf8_char_encoded_bytes.join
 
             if URI.decode(utf8_char_encoded).valid_encoding?
-              skip_next = bytes * 3 - 1
+              # It's valid!
               char_array << utf8_char_encoded
-            else
-              skip_next = 2
+
+              # If we're dealing with a multibyte character, skip more than two
+              # of the next characters, which have already been processed.
+              skip_next = bytes * 3 - 1
             end
-          else
-            skip_next = 2
           end
         else
+          # This was not an encoded character, so just add it and move to the next.
           skip_next = 0
           char_array << char
         end
       end
 
       char_array
+    end
+
+    # Grab the next num_bytes URI-encoded bytes from the raw character array.
+    # Returns an array like ['%E2', '%9C', '%93']
+    def next_n_bytes_from(index, num_bytes)
+      return [] if data.chars.length < index + (3 * num_bytes)
+
+      num_bytes.times.map do |n|
+        pct_index = index + (3 * n)
+        if data.chars[pct_index] == '%'
+          byte = data.chars[pct_index + 1..pct_index + 2].join('')
+        else
+          return []
+        end
+        '%' + byte
+      end
     end
 
     # If the first byte is between 0xC0 and 0xDF, the UTF-8 character has two bytes;

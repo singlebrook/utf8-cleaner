@@ -36,7 +36,6 @@ module UTF8Cleaner
           bytes = utf8_char_length_in_bytes(first_byte)
 
           valid_num_bytes = true
-          #puts "processing " + data.chars[index..-1].join
           if data.chars.length < index + (3 * bytes)
             valid_num_bytes = false
           else
@@ -68,7 +67,6 @@ module UTF8Cleaner
           skip_next = 0
           char_array << char
         end
-        #puts "skip_next: #{skip_next}"
       end
 
       char_array

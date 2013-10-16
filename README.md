@@ -1,5 +1,7 @@
 # UTF8Cleaner
 
+{<img src="https://secure.travis-ci.org/singlebrook/utf8-cleaner.png" />}[http://travis-ci.org/singlebrook/utf8-cleaner]
+
 Removes invalid UTF-8 characters from the environment so that your app doesn't choke
 on them. This prevents errors like "invalid byte sequence in UTF-8".
 

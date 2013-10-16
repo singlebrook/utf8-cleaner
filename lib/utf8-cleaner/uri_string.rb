@@ -22,9 +22,8 @@ module UTF8Cleaner
 
     # Returns an array of valid URI-encoded UTF-8 characters.
     def encoded_char_array
-      skip_next = 0
-      index = 0
       char_array = []
+      index = 0
 
       while (index < data.chars.length) do
         char = data.chars[index]

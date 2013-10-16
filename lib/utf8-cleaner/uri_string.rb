@@ -7,7 +7,11 @@ module UTF8Cleaner
     end
 
     def cleaned
-      encoded_char_array.join
+      if valid?
+        data
+      else
+        encoded_char_array.join
+      end
     end
 
     def encoded?
@@ -15,7 +19,7 @@ module UTF8Cleaner
     end
 
     def valid?
-      URI.decode(data).valid_encoding?
+      valid_uri_encoded_utf8(data)
     end
 
     private
@@ -25,8 +29,8 @@ module UTF8Cleaner
       char_array = []
       index = 0
 
-      while (index < data.chars.length) do
-        char = data.chars[index]
+      while (index < data.length) do
+        char = data[index]
 
         if char == '%'
           # Skip the next two characters, which are the encoded byte
@@ -34,7 +38,7 @@ module UTF8Cleaner
           skip_next = 2
 
           # How long is this character?
-          first_byte = '0x' + (data.chars[index + 1] + data.chars[index + 2]).upcase
+          first_byte = '0x' + (data[index + 1] + data[index + 2]).upcase
           bytes = utf8_char_length_in_bytes(first_byte)
 
           # Grab the specified number of encoded bytes
@@ -46,7 +50,7 @@ module UTF8Cleaner
             # We did. Is it a valid character?
             utf8_char_encoded = utf8_char_encoded_bytes.join
 
-            if URI.decode(utf8_char_encoded).valid_encoding?
+            if valid_uri_encoded_utf8(utf8_char_encoded)
               # It's valid!
               char_array << utf8_char_encoded
 
@@ -66,16 +70,20 @@ module UTF8Cleaner
       char_array
     end
 
+    def valid_uri_encoded_utf8(string)
+      URI.decode(string).force_encoding('UTF-8').valid_encoding?
+    end
+
     # Grab the next num_bytes URI-encoded bytes from the raw character array.
     # Returns an array like ['%E2', '%9C', '%93']
     def next_n_bytes_from(index, num_bytes)
-      return [] if data.chars.length < index + (3 * num_bytes)
+      return [] if data.length < index + (3 * num_bytes)
 
       num_bytes.times.map do |n|
         # Look for percent signs in the right places
         pct_index = index + (3 * n)
-        if data.chars[pct_index] == '%'
-          byte = data.chars[pct_index + 1..pct_index + 2].join('')
+        if data[pct_index] == '%'
+          byte = data[pct_index + 1..pct_index + 2]
         else
           # An expected percent sign was missing. The whole character is invalid.
           return []

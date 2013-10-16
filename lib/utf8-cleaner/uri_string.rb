@@ -32,19 +32,8 @@ module UTF8Cleaner
           next
         end
         if char == pct
-          # If the first byte is between 0xC0 and 0xDF, the UTF-8 character has two bytes;
-          # if it is between 0xE0 and 0xEF, the UTF-8 character has 3 bytes;
-          # and if it is 0xF0 and 0xFF, the UTF-8 character has 4 bytes.
           first_byte = '0x' + (data.chars[index + 1] + data.chars[index + 2]).upcase
-          if first_byte.hex < 'C0'.hex
-            bytes = 1
-          elsif first_byte.hex < 'DF'.hex
-            bytes = 2
-          elsif first_byte.hex < 'EF'.hex
-            bytes = 3
-          else
-            bytes = 4
-          end
+          bytes = utf8_char_length_in_bytes(first_byte)
 
           valid_num_bytes = true
           #puts "processing " + data.chars[index..-1].join
@@ -84,5 +73,21 @@ module UTF8Cleaner
 
       char_array
     end
+
+    # If the first byte is between 0xC0 and 0xDF, the UTF-8 character has two bytes;
+    # if it is between 0xE0 and 0xEF, the UTF-8 character has 3 bytes;
+    # and if it is 0xF0 and 0xFF, the UTF-8 character has 4 bytes.
+    def utf8_char_length_in_bytes(first_byte)
+      if first_byte.hex < 'C0'.hex
+        1
+      elsif first_byte.hex < 'DF'.hex
+        2
+      elsif first_byte.hex < 'EF'.hex
+        3
+      else
+        4
+      end
+    end
+
   end
 end

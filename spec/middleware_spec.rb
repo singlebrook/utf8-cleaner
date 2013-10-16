@@ -1,7 +1,6 @@
-# -*- encoding: utf-8 -*-
 require 'spec_helper'
 
-describe 'UTF8Cleaner::Middleware' do
+describe UTF8Cleaner::Middleware do
   let :env do
     {
       'PATH_INFO' => 'foo/%FFbar%2e%2fbaz%26%3B',

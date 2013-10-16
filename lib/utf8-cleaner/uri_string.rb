@@ -23,15 +23,12 @@ module UTF8Cleaner
     # Returns an array of valid URI-encoded UTF-8 characters.
     def encoded_char_array
       skip_next = 0
-      index = -1
+      index = 0
       char_array = []
 
-      data.chars.each do |char|
-        index += 1
-        if skip_next > 0
-          skip_next -= 1
-          next
-        end
+      while (index < data.chars.length) do
+        char = data.chars[index]
+
         if char == '%'
           # Skip the next two characters, which are the encoded byte
           # indicates by this %. (We'll change this later for multibyte characters.)
@@ -59,11 +56,12 @@ module UTF8Cleaner
               skip_next = bytes * 3 - 1
             end
           end
+          index += skip_next
         else
           # This was not an encoded character, so just add it and move to the next.
-          skip_next = 0
           char_array << char
         end
+        index += 1
       end
 
       char_array
@@ -75,10 +73,12 @@ module UTF8Cleaner
       return [] if data.chars.length < index + (3 * num_bytes)
 
       num_bytes.times.map do |n|
+        # Look for percent signs in the right places
         pct_index = index + (3 * n)
         if data.chars[pct_index] == '%'
           byte = data.chars[pct_index + 1..pct_index + 2].join('')
         else
+          # An expected percent sign was missing. The whole character is invalid.
           return []
         end
         '%' + byte
@@ -88,6 +88,7 @@ module UTF8Cleaner
     # If the first byte is between 0xC0 and 0xDF, the UTF-8 character has two bytes;
     # if it is between 0xE0 and 0xEF, the UTF-8 character has 3 bytes;
     # and if it is 0xF0 and 0xFF, the UTF-8 character has 4 bytes.
+    # first_byte is a string like "0x13"
     def utf8_char_length_in_bytes(first_byte)
       if first_byte.hex < 'C0'.hex
         1

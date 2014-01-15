@@ -5,6 +5,7 @@ require 'spec_helper'
 module UTF8Cleaner
 
   describe URIString do
+    let(:empty_string)   { URIString.new('') }
     let(:invalid_string)   { URIString.new('%FF') }
     let(:ascii_string)     { URIString.new('foo') }
     let(:encoded_string)   { URIString.new('%26') }
@@ -35,6 +36,7 @@ module UTF8Cleaner
     end
 
     describe '#valid?' do
+      it { empty_string.should be_valid }
       it { ascii_string.should be_valid }
       it { encoded_string.should be_valid }
       it { multibyte_string.should be_valid }

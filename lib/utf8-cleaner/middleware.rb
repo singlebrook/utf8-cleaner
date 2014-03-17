@@ -20,13 +20,6 @@ module UTF8Cleaner
 
     private
 
-    def is_valid_utf8(string)
-      utf8 = string.dup.force_encoding('UTF-8')
-      string == utf8 && utf8.valid_encoding?
-    rescue EncodingError
-      false
-    end
-
     def sanitize_env(env)
       SANITIZE_ENV_KEYS.each do |key|
         next unless value = env[key]

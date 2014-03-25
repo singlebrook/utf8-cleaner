@@ -21,7 +21,7 @@ Or install it yourself as:
 
 If you're not running Rails, you'll have to add the middleware to your config.ru:
 
-    require 'uf8-cleaner'
+    require 'utf8-cleaner'
     use UTF8Cleaner::Middleware
 
 ## Usage

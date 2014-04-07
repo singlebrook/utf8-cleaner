@@ -21,14 +21,31 @@ module UTF8Cleaner
     private
 
     def sanitize_env(env)
+      sanitize_env_keys(env)
+      sanitize_env_rack_input(env)
+      env
+    end
+
+    def sanitize_env_keys(env)
       SANITIZE_ENV_KEYS.each do |key|
         next unless value = env[key]
-
-        if value.include?('%')
-          env[key] = URIString.new(value).cleaned
-        end
+        cleaned_value = cleaned_uri_string(value)
+        env[key] = cleaned_value if cleaned_value
       end
-      env
+    end
+
+    def sanitize_env_rack_input(env)
+      if value = env['rack.input'].read
+        cleaned_value = cleaned_uri_string(value)
+        env['rack.input'].reopen(cleaned_value) if cleaned_value
+      end
+      env['rack.input'].rewind
+    end
+
+    def cleaned_uri_string(value)
+      if value.include?('%')
+        URIString.new(value).cleaned
+      end
     end
   end
 end

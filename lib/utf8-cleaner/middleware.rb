@@ -35,13 +35,16 @@ module UTF8Cleaner
     end
 
     def sanitize_env_rack_input(env)
-      if value = env['rack.input'].read
-        unless value.force_encoding('UTF-8').valid_encoding?
-          cleaned_value = value.encode('UTF-16BE', :invalid => :replace, :replace => '').encode('UTF-8')
-          env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
-        end
+      case env['CONTENT_TYPE']
+      when 'application/x-www-form-urlencoded'
+        cleaned_value = cleaned_uri_string(env['rack.input'].read)
+        env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
+        env['rack.input'].rewind
+      when 'multipart/form-data'
+        # Don't process the data since it may contain binary content
+      else
+        # Unknown content type. Leave it alone
       end
-      env['rack.input'].rewind
     end
 
     def cleaned_uri_string(value)

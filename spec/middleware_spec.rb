@@ -8,7 +8,8 @@ describe UTF8Cleaner::Middleware do
       'QUERY_STRING' => 'foo=bar%FF',
       'HTTP_REFERER' => 'http://example.com/blog+Result:+%ED%E5+%ED%E0%F8%EB%EE%F1%FC+%F4%EE%F0%EC%FB+%E4%EB%FF+%EE%F2%EF%F0%E0%E2%EA%E8',
       'REQUEST_URI' => '%C3%89%E2%9C%93',
-      'rack.input' => StringIO.new("foo=\xFFbar\xF8")
+      'rack.input' => StringIO.new("foo=%FFbar%F8"),
+      'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
     }
   end
 
@@ -31,17 +32,20 @@ describe UTF8Cleaner::Middleware do
     # rack.input responds only to methods gets, each, rewind, read and close
     # Rack::Lint::InputWrapper is the class which servers wrappers are based on
     it "removes invalid UTF-8 sequences" do
-      wrapped_rack_input = Rack::Lint::InputWrapper.new(StringIO.new("foo=\xFFbar\xF8"))
-      env = { 'rack.input' => wrapped_rack_input }
+      wrapped_rack_input = Rack::Lint::InputWrapper.new(StringIO.new("foo=%FFbar%F8"))
+      env.merge!('rack.input' => wrapped_rack_input)
       new_env = UTF8Cleaner::Middleware.new(nil).send(:sanitize_env, env)
       new_env['rack.input'].read.should == 'foo=bar'
     end
+  end
 
-    it "does not re-encode already-valid input" do
-      wrapped_rack_input = Rack::Lint::InputWrapper.new(StringIO.new("legit"))
-      env = { 'rack.input' => wrapped_rack_input }
-      new_env = UTF8Cleaner::Middleware.new(nil).send(:sanitize_env, env)
-      new_env['rack.input'].class.should == Rack::Lint::InputWrapper
+  describe "when binary data is POSTed" do
+    before do
+      env['CONTENT_TYPE'] = 'multipart/form-data'
+    end
+    it "leaves the body alone" do
+      env['rack.input'].rewind
+      new_env['rack.input'].read.should == "foo=%FFbar%F8"
     end
   end
 end

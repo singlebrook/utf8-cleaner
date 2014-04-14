@@ -8,7 +8,7 @@ describe UTF8Cleaner::Middleware do
       'QUERY_STRING' => 'foo=bar%FF',
       'HTTP_REFERER' => 'http://example.com/blog+Result:+%ED%E5+%ED%E0%F8%EB%EE%F1%FC+%F4%EE%F0%EC%FB+%E4%EB%FF+%EE%F2%EF%F0%E0%E2%EA%E8',
       'REQUEST_URI' => '%C3%89%E2%9C%93',
-      'rack.input' => StringIO.new('foo=%FFbar%F8')
+      'rack.input' => StringIO.new("foo=\xFFbar\xF8")
     }
   end
 
@@ -31,7 +31,7 @@ describe UTF8Cleaner::Middleware do
     # rack.input responds only to methods gets, each, rewind, read and close
     # Rack::Lint::InputWrapper is the class which servers wrappers are based on
     it do
-      wrapped_rack_input = Rack::Lint::InputWrapper.new(StringIO.new('foo=%FFbar%F8'))
+      wrapped_rack_input = Rack::Lint::InputWrapper.new(StringIO.new("foo=\xFFbar\xF8"))
       wrapped_env = env.merge('rack.input' => wrapped_rack_input)
       new_env = UTF8Cleaner::Middleware.new(nil).send(:sanitize_env, wrapped_env)
       new_env['rack.input'].read.should == 'foo=bar'

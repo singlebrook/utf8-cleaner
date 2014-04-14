@@ -36,8 +36,10 @@ module UTF8Cleaner
 
     def sanitize_env_rack_input(env)
       if value = env['rack.input'].read
-        cleaned_value = value.encode('UTF-16BE', :invalid => :replace, :replace => '').encode('UTF-8')
-        env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
+        unless value.force_encoding('UTF-8').valid_encoding?
+          cleaned_value = value.encode('UTF-16BE', :invalid => :replace, :replace => '').encode('UTF-8')
+          env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
+        end
       end
       env['rack.input'].rewind
     end

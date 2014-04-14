@@ -14,10 +14,6 @@ module UTF8Cleaner
       end
     end
 
-    def encoded?
-      data.include?('%')
-    end
-
     def valid?
       valid_uri_encoded_utf8(data)
     end

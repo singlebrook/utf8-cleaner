@@ -22,15 +22,6 @@ module UTF8Cleaner
       it { complex_invalid_string.cleaned.should eq('foo/bar%2e%2fbaz%26%3B%E2%9C%93baz') }
     end
 
-    describe '#encoded?' do
-      it { encoded_string.should be_encoded }
-      it { invalid_string.should be_encoded }
-      it { multibyte_string.should be_encoded }
-      it { complex_invalid_string.should be_encoded }
-
-      it { ascii_string.should_not be_encoded }
-    end
-
     describe '#valid?' do
       it { ascii_string.should be_valid }
       it { encoded_string.should be_valid }

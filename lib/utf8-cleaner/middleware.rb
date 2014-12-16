@@ -29,8 +29,18 @@ module UTF8Cleaner
     def sanitize_env_keys(env)
       SANITIZE_ENV_KEYS.each do |key|
         next unless value = env[key]
+
+        utf8_value = valid_utf8_string(value)
+        env[key] = value = utf8_value if utf8_value
+
         cleaned_value = cleaned_uri_string(value)
         env[key] = cleaned_value if cleaned_value
+      end
+    end
+
+    def valid_utf8_string(value)
+      if !value.frozen? && !value.force_encoding("UTF-8").valid_encoding?
+        value.encode("UTF-8", "ASCII-8BIT", undef: :replace, replace: "")
       end
     end
 

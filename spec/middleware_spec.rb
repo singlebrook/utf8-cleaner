@@ -28,6 +28,17 @@ describe UTF8Cleaner::Middleware do
     it { new_env['REQUEST_URI'].should == '%C3%89%E2%9C%93' }
   end
 
+  describe "replaces invalid UTF-8 characters" do
+    before { env['QUERY_STRING'] = "foo=\x7fbar%FF\x80" }
+    it { new_env['QUERY_STRING'].should == "foo=\x7fbar" }
+  end
+
+  context "doesn't error when environment value is frozen" do
+    # Web servers can freeze environment values
+    before { env['QUERY_STRING'] = "".freeze }
+    it { new_env['QUERY_STRING'].should == "" }
+  end
+
   describe "when rack.input is wrapped" do
     # rack.input responds only to methods gets, each, rewind, read and close
     # Rack::Lint::InputWrapper is the class which servers wrappers are based on

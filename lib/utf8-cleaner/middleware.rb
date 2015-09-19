@@ -50,6 +50,8 @@ module UTF8Cleaner
     def cleaned_uri_string(value)
       if !value.ascii_only? || value.include?('%')
         URIString.new(value).cleaned
+      else
+        value
       end
     end
   end

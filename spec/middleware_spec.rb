@@ -70,6 +70,10 @@ module UTF8Cleaner
         expect(URIString).to receive(:new).exactly(2).times.and_call_original
         new_env
       end
+
+      it "leaves clean values alone" do
+        expect(new_env['PATH_INFO']).to eq('/this/is/safe')
+      end
     end
   end
 end

@@ -16,7 +16,8 @@ module UTF8Cleaner
           'HTTP_USER_AGENT' => "Android Versi\xF3n/4.0\x93",
           'REQUEST_URI' => '%C3%89%E2%9C%93',
           'rack.input' => StringIO.new("foo=%FFbar%F8"),
-          'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
+          'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
+          'HTTP_COOKIE' => nil
         }
       end
 

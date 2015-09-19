@@ -34,14 +34,14 @@ module UTF8Cleaner
     def sanitize_env_keys(env)
       SANITIZE_ENV_KEYS.each do |key|
         next unless value = env[key]
-        env[key] = cleaned_uri_string(value)
+        env[key] = cleaned_string(value)
       end
     end
 
     def sanitize_env_rack_input(env)
       case env['CONTENT_TYPE']
       when 'application/x-www-form-urlencoded'
-        cleaned_value = cleaned_uri_string(env['rack.input'].read)
+        cleaned_value = cleaned_string(env['rack.input'].read)
         env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
         env['rack.input'].rewind
       when 'multipart/form-data'
@@ -51,8 +51,8 @@ module UTF8Cleaner
       end
     end
 
-    def cleaned_uri_string(value)
-      value = tidy_bytes(value) if value && !value.ascii_only?
+    def cleaned_string(value)
+      value = tidy_bytes(value) unless value.ascii_only?
       value = URIString.new(value).cleaned if value.include?('%')
       value
     end

@@ -11,24 +11,24 @@ module UTF8Cleaner
                                                 # foo/   bar.  /  baz&  ;  √              baz
 
     describe '#new' do
-      it { encoded_string.should be_a URIString }
+      it { expect(encoded_string).to be_a(URIString) }
     end
 
     describe '#cleaned' do
-      it { invalid_string.cleaned.should eq('') }
-      it { ascii_string.cleaned.should eq('foo') }
-      it { encoded_string.cleaned.should eq('%26') }
-      it { multibyte_string.cleaned.should eq('%E2%9C%93') }
-      it { complex_invalid_string.cleaned.should eq('foo/bar%2e%2fbaz%26%3B%E2%9C%93baz') }
+      it { expect(invalid_string.cleaned).to eq('') }
+      it { expect(ascii_string.cleaned).to eq('foo') }
+      it { expect(encoded_string.cleaned).to eq('%26') }
+      it { expect(multibyte_string.cleaned).to eq('%E2%9C%93') }
+      it { expect(complex_invalid_string.cleaned).to eq('foo/bar%2e%2fbaz%26%3B%E2%9C%93baz') }
     end
 
     describe '#valid?' do
-      it { ascii_string.should be_valid }
-      it { encoded_string.should be_valid }
-      it { multibyte_string.should be_valid }
+      it { expect(ascii_string).to be_valid }
+      it { expect(encoded_string).to be_valid }
+      it { expect(multibyte_string).to be_valid }
 
-      it { invalid_string.should_not be_valid }
-      it { complex_invalid_string.should_not be_valid }
+      it { expect(invalid_string).to_not be_valid }
+      it { expect(complex_invalid_string).to_not be_valid }
     end
 
   end

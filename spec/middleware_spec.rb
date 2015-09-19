@@ -18,14 +18,14 @@ describe UTF8Cleaner::Middleware do
   end
 
   describe "removes invalid UTF-8 sequences" do
-    it { new_env['QUERY_STRING'].should == 'foo=bar' }
-    it { new_env['HTTP_REFERER'].should == 'http://example.com/blog+Result:+++++' }
-    it { new_env['rack.input'].read.should == 'foo=bar' }
+    it { expect(new_env['QUERY_STRING']).to eq('foo=bar') }
+    it { expect(new_env['HTTP_REFERER']).to eq('http://example.com/blog+Result:+++++') }
+    it { expect(new_env['rack.input'].read).to eq('foo=bar') }
   end
 
   describe "leaves all valid characters untouched" do
-    it { new_env['PATH_INFO'].should == 'foo/bar%2e%2fbaz%26%3B' }
-    it { new_env['REQUEST_URI'].should == '%C3%89%E2%9C%93' }
+    it { expect(new_env['PATH_INFO']).to eq('foo/bar%2e%2fbaz%26%3B') }
+    it { expect(new_env['REQUEST_URI']).to eq('%C3%89%E2%9C%93') }
   end
 
   describe "when rack.input is wrapped" do
@@ -35,7 +35,7 @@ describe UTF8Cleaner::Middleware do
       wrapped_rack_input = Rack::Lint::InputWrapper.new(StringIO.new("foo=%FFbar%F8"))
       env.merge!('rack.input' => wrapped_rack_input)
       new_env = UTF8Cleaner::Middleware.new(nil).send(:sanitize_env, env)
-      new_env['rack.input'].read.should == 'foo=bar'
+      expect(new_env['rack.input'].read).to eq('foo=bar')
     end
   end
 
@@ -45,7 +45,7 @@ describe UTF8Cleaner::Middleware do
     end
     it "leaves the body alone" do
       env['rack.input'].rewind
-      new_env['rack.input'].read.should == "foo=%FFbar%F8"
+      expect(new_env['rack.input'].read).to eq "foo=%FFbar%F8"
     end
   end
 end

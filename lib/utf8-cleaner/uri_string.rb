@@ -1,10 +1,6 @@
-require 'active_support/multibyte/unicode'
-
 module UTF8Cleaner
   class URIString
     attr_accessor :data
-
-    include ActiveSupport::Multibyte::Unicode
 
     def initialize(data)
       self.data = data
@@ -14,7 +10,6 @@ module UTF8Cleaner
       if valid?
         data
       else
-        replace_windows_chars
         encoded_char_array.join
       end
     end
@@ -95,12 +90,6 @@ module UTF8Cleaner
           return []
         end
         '%' + byte
-      end
-    end
-
-    def replace_windows_chars
-      if !data.nil? && !data.ascii_only?
-        self.data = tidy_bytes(data)
       end
     end
 

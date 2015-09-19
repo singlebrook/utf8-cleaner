@@ -1,3 +1,5 @@
+require 'active_support/multibyte/unicode'
+
 module UTF8Cleaner
   class Middleware
 
@@ -20,6 +22,8 @@ module UTF8Cleaner
     end
 
     private
+
+    include ActiveSupport::Multibyte::Unicode
 
     def sanitize_env(env)
       sanitize_env_keys(env)
@@ -48,11 +52,9 @@ module UTF8Cleaner
     end
 
     def cleaned_uri_string(value)
-      if !value.ascii_only? || value.include?('%')
-        URIString.new(value).cleaned
-      else
-        value
-      end
+      value = tidy_bytes(value) if value && !value.ascii_only?
+      value = URIString.new(value).cleaned if value.include?('%')
+      value
     end
   end
 end

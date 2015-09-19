@@ -61,13 +61,12 @@ module UTF8Cleaner
       let(:env) do
         {
           'PATH_INFO' => '/this/is/safe',
-          'QUERY_STRING' => 'foo=bar%FF',
-          'HTTP_USER_AGENT' => "Android Versi\xF3n/4.0"
+          'QUERY_STRING' => 'foo=bar%FF'
         }
       end
 
-      it "only cleans potentially unclean strings" do
-        expect(URIString).to receive(:new).exactly(2).times.and_call_original
+      it "only runs URIString cleaning on potentially unclean strings" do
+        expect(URIString).to receive(:new).once.and_call_original
         new_env
       end
 

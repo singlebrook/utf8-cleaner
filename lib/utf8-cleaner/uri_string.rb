@@ -1,4 +1,5 @@
 module UTF8Cleaner
+  # Cleans invalid %-encodings from URI-encoded strings.
   class URIString
     attr_accessor :data
 

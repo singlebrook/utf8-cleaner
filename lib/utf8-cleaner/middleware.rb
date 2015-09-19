@@ -3,6 +3,7 @@ module UTF8Cleaner
 
     SANITIZE_ENV_KEYS = [
      "HTTP_REFERER",
+     "HTTP_USER_AGENT",
      "PATH_INFO",
      "QUERY_STRING",
      "REQUEST_PATH",
@@ -29,8 +30,7 @@ module UTF8Cleaner
     def sanitize_env_keys(env)
       SANITIZE_ENV_KEYS.each do |key|
         next unless value = env[key]
-        cleaned_value = cleaned_uri_string(value)
-        env[key] = cleaned_value if cleaned_value
+        env[key] = cleaned_uri_string(value)
       end
     end
 
@@ -48,7 +48,7 @@ module UTF8Cleaner
     end
 
     def cleaned_uri_string(value)
-      if value.include?('%')
+      if !value.ascii_only? || value.include?('%')
         URIString.new(value).cleaned
       end
     end

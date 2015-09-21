@@ -13,7 +13,7 @@ module UTF8Cleaner
           'PATH_INFO' => 'foo/%FFbar%2e%2fbaz%26%3B',
           'QUERY_STRING' => 'foo=bar%FF',
           'HTTP_REFERER' => 'http://example.com/blog+Result:+%ED%E5+%ED%E0%F8%EB%EE%F1%FC+%F4%EE%F0%EC%FB+%E4%EB%FF+%EE%F2%EF%F0%E0%E2%EA%E8',
-          'HTTP_USER_AGENT' => "Android Versi\xF3n/4.0",
+          'HTTP_USER_AGENT' => "Android Versi\xF3n/4.0\x93",
           'REQUEST_URI' => '%C3%89%E2%9C%93',
           'rack.input' => StringIO.new("foo=%FFbar%F8"),
           'CONTENT_TYPE' => 'application/x-www-form-urlencoded'
@@ -27,7 +27,7 @@ module UTF8Cleaner
       end
 
       describe 'replaces \x-encoded characters from the ISO-8859-1 and CP1252 code pages with their UTF-8 equivalents' do
-        it { expect(new_env['HTTP_USER_AGENT']).to eq('Android Versión/4.0') }
+        it { expect(new_env['HTTP_USER_AGENT']).to eq("Android Versi\u00F3n/4.0\u201C") }
       end
 
       describe "leaves all valid characters untouched" do

@@ -75,5 +75,14 @@ module UTF8Cleaner
         expect(new_env['PATH_INFO']).to eq('/this/is/safe')
       end
     end
+
+    # Ensure that all cleaned values parse cleanly.
+    # E.g. make sure Rack/Rails won't choke on them
+    after do
+      cleaned = new_env
+      env.keys.reject{|key| key == 'rack.input'}.each do |key|
+        URI.decode_www_form_component(cleaned[key]) if cleaned[key]
+      end
+    end
   end
 end

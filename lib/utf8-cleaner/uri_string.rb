@@ -3,6 +3,10 @@ module UTF8Cleaner
   class URIString
     attr_accessor :data
 
+    HEX_CHARS = '0-9a-fA-F'
+    HEX_CHARS_REGEX = /[#{HEX_CHARS}]/
+    INVALID_PERCENT_ENCODING_REGEX = /%(?![#{HEX_CHARS}]{2})/
+
     def initialize(data)
       self.data = data
     end
@@ -39,6 +43,19 @@ module UTF8Cleaner
           # indicates by this %. (We'll change this later for multibyte characters.)
           skip_next = 2
 
+          # If the next character is not a hex char, drop the percent and it
+          unless data[index + 1] =~ HEX_CHARS_REGEX
+            index += 2
+            next
+          end
+
+          # If the character after that is not a hex char, drop the percent and
+          # both of the following chars.
+          unless data[index + 2] =~ HEX_CHARS_REGEX
+            index += 3
+            next
+          end
+
           # How long is this character?
           first_byte = '0x' + (data[index + 1] + data[index + 2]).upcase
           bytes = utf8_char_length_in_bytes(first_byte)
@@ -73,7 +90,8 @@ module UTF8Cleaner
     end
 
     def valid_uri_encoded_utf8(string)
-      URI.decode(string).force_encoding('UTF-8').valid_encoding?
+      URI.decode(string).force_encoding('UTF-8').valid_encoding? &&
+        string !~ INVALID_PERCENT_ENCODING_REGEX
     end
 
     # Grab the next num_bytes URI-encoded bytes from the raw character array.

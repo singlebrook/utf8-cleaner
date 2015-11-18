@@ -21,11 +21,6 @@ module UTF8Cleaner
 
     def valid?
       valid_uri_encoded_utf8(data)
-    rescue ArgumentError => e
-      if e.message =~ /invalid byte sequence/
-        return false
-      end
-      raise e
     end
 
     private
@@ -92,6 +87,11 @@ module UTF8Cleaner
     def valid_uri_encoded_utf8(string)
       URI.decode(string).force_encoding('UTF-8').valid_encoding? &&
         string !~ INVALID_PERCENT_ENCODING_REGEX
+    rescue ArgumentError => e
+      if e.message =~ /invalid byte sequence/
+        return false
+      end
+      raise e
     end
 
     # Grab the next num_bytes URI-encoded bytes from the raw character array.

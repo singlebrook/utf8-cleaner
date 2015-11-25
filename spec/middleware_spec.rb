@@ -10,14 +10,14 @@ module UTF8Cleaner
     describe "with a big nasty env" do
       let :env do
         {
-            'PATH_INFO' => 'foo/%FFbar%2e%2fbaz%26%3B',
-            'QUERY_STRING' => 'foo=bar%FF',
-            'HTTP_REFERER' => 'http://example.com/blog+Result:+%ED%E5+%ED%E0%F8%EB%EE%F1%FC+%F4%EE%F0%EC%FB+%E4%EB%FF+%EE%F2%EF%F0%E0%E2%EA%E8',
-            'HTTP_USER_AGENT' => "Android Versi\xF3n/4.0\x93",
-            'REQUEST_URI' => '%C3%89%E2%9C%93',
-            'rack.input' => StringIO.new("foo=%FFbar%F8"),
-            'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
-            'HTTP_COOKIE' => nil
+          'PATH_INFO' => 'foo/%FFbar%2e%2fbaz%26%3B',
+          'QUERY_STRING' => 'foo=bar%FF',
+          'HTTP_REFERER' => 'http://example.com/blog+Result:+%ED%E5+%ED%E0%F8%EB%EE%F1%FC+%F4%EE%F0%EC%FB+%E4%EB%FF+%EE%F2%EF%F0%E0%E2%EA%E8',
+          'HTTP_USER_AGENT' => "Android Versi\xF3n/4.0\x93",
+          'REQUEST_URI' => '%C3%89%E2%9C%93',
+          'rack.input' => StringIO.new("foo=%FFbar%F8"),
+          'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
+          'HTTP_COOKIE' => nil
         }
       end
 
@@ -71,8 +71,8 @@ module UTF8Cleaner
     describe "with a minimal env" do
       let(:env) do
         {
-            'PATH_INFO' => '/this/is/safe',
-            'QUERY_STRING' => 'foo=bar%FF'
+          'PATH_INFO' => '/this/is/safe',
+          'QUERY_STRING' => 'foo=bar%FF'
         }
       end
 
@@ -90,7 +90,7 @@ module UTF8Cleaner
     # E.g. make sure Rack/Rails won't choke on them
     after do
       cleaned = new_env
-      env.keys.reject { |key| key == 'rack.input' }.each do |key|
+      env.keys.reject{|key| key == 'rack.input'}.each do |key|
         URI.decode_www_form_component(cleaned[key]) if cleaned[key]
       end
     end

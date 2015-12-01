@@ -56,6 +56,16 @@ module UTF8Cleaner
           expect(new_env['rack.input'].read).to eq "foo=%FFbar%F8"
         end
       end
+
+      describe "when json data is POSTed" do
+        before do
+          env['CONTENT_TYPE'] = 'application/json'
+        end
+        it "removes removes invalid %-encoded UTF-8 sequences" do
+          env['rack.input'].rewind
+          expect(new_env['rack.input'].read).to eq('foo=bar')
+        end
+      end
     end
 
     describe "with a minimal env" do

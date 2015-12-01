@@ -40,7 +40,7 @@ module UTF8Cleaner
 
     def sanitize_env_rack_input(env)
       case env['CONTENT_TYPE']
-      when 'application/x-www-form-urlencoded'
+      when 'application/x-www-form-urlencoded','application/json'
         cleaned_value = cleaned_string(env['rack.input'].read)
         env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
         env['rack.input'].rewind

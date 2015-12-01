@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## V0.2.1
+
+* Cleans request body when content type is application/json
+
 ## V0.2.0
 
 * Removes invalid %-encodings like "%x", "%0z", and "%" if not followed by two hex chars

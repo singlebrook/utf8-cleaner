@@ -21,6 +21,8 @@ module UTF8Cleaner
 
     def valid?
       valid_uri_encoded_utf8(data)
+    rescue Encoding::CompatibilityError
+      false
     end
 
     private

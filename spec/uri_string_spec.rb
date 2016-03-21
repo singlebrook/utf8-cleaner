@@ -12,6 +12,7 @@ module UTF8Cleaner
     let(:no_byte_at_all)      { URIString.new('%') }
     let(:not_even_hex_chars1) { URIString.new('%x') }
     let(:not_even_hex_chars2) { URIString.new('%0zhey') }
+    let(:mixed_encodings)     { URIString.new('§%e2') }
 
     describe '#new' do
       it { expect(encoded_string).to be_a(URIString) }
@@ -26,6 +27,7 @@ module UTF8Cleaner
       it { expect(no_byte_at_all.cleaned).to eq('') }
       it { expect(not_even_hex_chars1.cleaned).to eq('') }
       it { expect(not_even_hex_chars2.cleaned).to eq('hey') }
+      it { expect(mixed_encodings.cleaned).to eq('§') }
     end
 
     describe '#valid?' do
@@ -38,6 +40,7 @@ module UTF8Cleaner
       it { expect(no_byte_at_all).to_not be_valid }
       it { expect(not_even_hex_chars1).to_not be_valid }
       it { expect(not_even_hex_chars2).to_not be_valid }
+      it { expect(mixed_encodings).to_not be_valid }
     end
 
   end

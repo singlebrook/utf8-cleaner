@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'spec_helper'
 
 module UTF8Cleaner

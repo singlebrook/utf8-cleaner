@@ -43,3 +43,4 @@ Original middleware author: @phoet - https://gist.github.com/phoet/1336754
 * Ruby 1.9.3 compatibility: @pithyless - https://gist.github.com/pithyless/3639014
 * Code review and cleanup: @nextmat
 * POST body sanitization: @salrepe
+* Bug fixes: @cosine

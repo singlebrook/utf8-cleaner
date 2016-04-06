@@ -40,8 +40,12 @@ module UTF8Cleaner
 
     def sanitize_env_rack_input(env)
       case env['CONTENT_TYPE']
-      when 'application/x-www-form-urlencoded','application/json'
+      when 'application/x-www-form-urlencoded'
         cleaned_value = cleaned_string(env['rack.input'].read)
+        env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
+        env['rack.input'].rewind
+      when 'application/json'
+        cleaned_value = cleaned_string(env['rack.input'].read, :skip_uri_decode => true)
         env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
         env['rack.input'].rewind
       when 'multipart/form-data'
@@ -51,9 +55,9 @@ module UTF8Cleaner
       end
     end
 
-    def cleaned_string(value)
+    def cleaned_string(value, options = {})
       value = tidy_bytes(value) unless value.ascii_only?
-      value = URIString.new(value).cleaned if value.include?('%')
+      value = URIString.new(value).cleaned if !options[:skip_uri_decode] and value.include?('%')
       value
     end
   end

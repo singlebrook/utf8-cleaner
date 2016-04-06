@@ -40,9 +40,18 @@ module UTF8Cleaner
 
     def sanitize_env_rack_input(env)
       case env['CONTENT_TYPE']
-      when 'application/x-www-form-urlencoded','application/json'
+      when 'application/x-www-form-urlencoded'
+        # This data gets the full cleaning treatment
         cleaned_value = cleaned_string(env['rack.input'].read)
         env['rack.input'] = StringIO.new(cleaned_value) if cleaned_value
+        env['rack.input'].rewind
+      when 'application/json'
+        # This data only gets cleaning of invalid UTF-8 (e.g. from another charset)
+        # but we do not URI-decode it.
+        rack_input = env['rack.input'].read
+        if rack_input && !rack_input.ascii_only?
+          env['rack.input'] = StringIO.new(tidy_bytes(rack_input))
+        end
         env['rack.input'].rewind
       when 'multipart/form-data'
         # Don't process the data since it may contain binary content

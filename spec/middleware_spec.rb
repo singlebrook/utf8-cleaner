@@ -61,9 +61,18 @@ module UTF8Cleaner
         before do
           env['CONTENT_TYPE'] = 'application/json'
         end
-        it "removes removes invalid %-encoded UTF-8 sequences" do
+
+        it "tidies invalid UTF-8 sequences" do
+          env['rack.input'] = StringIO.new(%Q({"foo": "\xFFbar\xF8"}))
           env['rack.input'].rewind
-          expect(new_env['rack.input'].read).to eq('foo=bar')
+          expect(new_env['rack.input'].read).to eq(%Q({"foo": "\u00FFbar\u00F8"}))
+        end
+
+        it "does not attempt to URI-decode data" do
+          json = %Q({"foo": "%FF"})
+          env['rack.input'] = StringIO.new(json)
+          env['rack.input'].rewind
+          expect(new_env['rack.input'].read).to eq(json)
         end
       end
     end

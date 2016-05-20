@@ -44,3 +44,4 @@ Original middleware author: @phoet - https://gist.github.com/phoet/1336754
 * Code review and cleanup: @nextmat
 * POST body sanitization: @salrepe
 * Bug fixes: @cosine
+* Rails 5 deprecation fix: @benlovell

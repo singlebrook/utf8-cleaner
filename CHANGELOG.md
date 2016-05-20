@@ -1,10 +1,22 @@
 # CHANGELOG
 
-## V0.2.1
+## v0.2.4
+
+* Rails 5 support (just fixed deprecations)
+
+## v0.2.3
+
+* Don't URI-decode JSON in the request body
+
+## v0.2.2
+
+* Handle an exception related to mixed encodings in a single string
+
+## v0.2.1
 
 * Cleans request body when content type is application/json
 
-## V0.2.0
+## v0.2.0
 
 * Removes invalid %-encodings like "%x", "%0z", and "%" if not followed by two hex chars
 

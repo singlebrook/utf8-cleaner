@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v0.2.5
+
+* MIT license specified in gemspec
+
 ## v0.2.4
 
 * Rails 5 support (just fixed deprecations)

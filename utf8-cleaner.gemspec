@@ -11,6 +11,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{Removes invalid UTF8 characters from the URL and other env vars}
   gem.summary       = %q{Prevent annoying error reports of "invalid byte sequence in UTF-8"}
   gem.homepage      = "https://github.com/singlebrook/utf8-cleaner"
+  gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }

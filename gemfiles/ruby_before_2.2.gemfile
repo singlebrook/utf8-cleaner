@@ -1,0 +1,7 @@
+source "https://rubygems.org"
+
+# Avoid gem versions that require Ruby 2.2+
+gem 'activesupport', '< 5'
+gem 'rack', '< 2'
+
+gemspec :path => "../"

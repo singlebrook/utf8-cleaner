@@ -18,7 +18,8 @@ module UTF8Cleaner
           'rack.input' => StringIO.new("foo=%FFbar%F8"),
           'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
           'HTTP_COOKIE' => nil,
-          'SERVER_NAME' => "example.com\xD0"
+          'SERVER_NAME' => "example.com\xD0",
+          'HTTP_HOST' => "example.com\xD0"
         }
       end
 

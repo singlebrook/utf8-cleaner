@@ -8,6 +8,10 @@ module UTF8Cleaner
     end
 
     describe "with a big nasty env" do
+      let :host do
+        "\xD0".force_encoding('ASCII-8BIT')
+      end
+
       let :env do
         {
           'PATH_INFO' => 'foo/%FFbar%2e%2fbaz%26%3B',
@@ -18,9 +22,15 @@ module UTF8Cleaner
           'rack.input' => StringIO.new("foo=%FFbar%F8"),
           'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
           'HTTP_COOKIE' => nil,
-          'SERVER_NAME' => "example.com\xD0",
-          'HTTP_HOST' => "example.com\xD0"
+          'SERVER_NAME' => host,
+          'HTTP_HOST' => host
         }
+      end
+
+      describe 'host could be encoded to utf-8' do
+        it { expect(host.encoding.to_s).to eq('ASCII-8BIT') }
+        it { expect(new_env['HTTP_HOST'].encoding.to_s).to eq('UTF-8') }
+        it { expect(new_env['HTTP_HOST']).to eq(host.force_encoding('UTF-8')) }
       end
 
       describe "removes invalid %-encoded UTF-8 sequences" do

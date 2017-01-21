@@ -10,7 +10,9 @@ module UTF8Cleaner
      "QUERY_STRING",
      "REQUEST_PATH",
      "REQUEST_URI",
-     "HTTP_COOKIE"
+     "HTTP_COOKIE",
+     "SERVER_NAME",
+     "HTTP_HOST"
     ]
 
     def initialize(app)

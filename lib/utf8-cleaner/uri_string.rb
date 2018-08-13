@@ -6,6 +6,7 @@ module UTF8Cleaner
     HEX_CHARS = '0-9a-fA-F'
     HEX_CHARS_REGEX = /[#{HEX_CHARS}]/
     INVALID_PERCENT_ENCODING_REGEX = /%(?![#{HEX_CHARS}]{2})/
+    NULL_CHARS = /(%00)/
 
     def initialize(data)
       self.data = data
@@ -31,7 +32,6 @@ module UTF8Cleaner
     def encoded_char_array
       char_array = []
       index = 0
-
       while (index < data.length) do
         char = data[index]
 
@@ -87,8 +87,7 @@ module UTF8Cleaner
     end
 
     def valid_uri_encoded_utf8(string)
-      URI.decode(string).force_encoding('UTF-8').valid_encoding? &&
-        string !~ INVALID_PERCENT_ENCODING_REGEX
+      URI.decode(string).force_encoding('UTF-8').valid_encoding? && string !~ INVALID_PERCENT_ENCODING_REGEX && string !~ NULL_CHARS
     rescue ArgumentError => e
       if e.message =~ /invalid byte sequence/
         return false

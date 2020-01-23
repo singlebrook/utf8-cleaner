@@ -87,7 +87,7 @@ module UTF8Cleaner
     end
 
     def valid_uri_encoded_utf8(string)
-      URI.decode(string).force_encoding('UTF-8').valid_encoding? &&
+      URI::DEFAULT_PARSER.unescape(string).force_encoding('UTF-8').valid_encoding? &&
         string !~ INVALID_PERCENT_ENCODING_REGEX
     rescue ArgumentError => e
       if e.message =~ /invalid byte sequence/

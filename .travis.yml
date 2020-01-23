@@ -2,15 +2,6 @@ before_install:
   - gem install bundler
 language: ruby
 rvm:
-  - 2.2
   - 2.3
   - 2.4
   - 2.5
-matrix:
-  include:
-    - rvm: 1.9.3
-      gemfile: gemfiles/ruby_before_2.2.gemfile
-    - rvm: 2.0.0
-      gemfile: gemfiles/ruby_before_2.2.gemfile
-    - rvm: 2.1
-      gemfile: gemfiles/ruby_before_2.2.gemfile

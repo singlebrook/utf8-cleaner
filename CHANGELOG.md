@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## v1.0.0
+
+* Dropped support for Ruby < 2.3
+* Fixed deprecation warning in Ruby 2.7
+
 ## v0.2.5
 
 * MIT license specified in gemspec

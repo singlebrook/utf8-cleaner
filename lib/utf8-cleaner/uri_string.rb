@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module UTF8Cleaner
   # Cleans invalid %-encodings from URI-encoded strings.
   class URIString
@@ -32,7 +34,7 @@ module UTF8Cleaner
       char_array = []
       index = 0
 
-      while (index < data.length) do
+      while index < data.length do
         char = data[index]
 
         if char == '%'
@@ -129,6 +131,5 @@ module UTF8Cleaner
         4
       end
     end
-
   end
 end

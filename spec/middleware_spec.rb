@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rack/lint'
 
@@ -40,7 +42,7 @@ module UTF8Cleaner
         # rack.input responds only to methods gets, each, rewind, read and close
         # Rack::Lint::InputWrapper is the class which servers wrappers are based on
         it "removes invalid UTF-8 sequences" do
-          wrapped_rack_input = Rack::Lint::InputWrapper.new(StringIO.new("foo=%FFbar%F8"))
+          wrapped_rack_input = Rack::Lint::Wrapper::InputWrapper.new(StringIO.new("foo=%FFbar%F8"))
           env.merge!('rack.input' => wrapped_rack_input)
           new_env = Middleware.new(nil).send(:sanitize_env, env)
           expect(new_env['rack.input'].read).to eq('foo=bar')
@@ -99,7 +101,7 @@ module UTF8Cleaner
     # E.g. make sure Rack/Rails won't choke on them
     after do
       cleaned = new_env
-      env.keys.reject{|key| key == 'rack.input'}.each do |key|
+      env.keys.reject { |key| key == 'rack.input' }.each do |key|
         URI.decode_www_form_component(cleaned[key]) if cleaned[key]
       end
     end

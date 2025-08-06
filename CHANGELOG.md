@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## v2.0.0
+
+* Support Rack 3 and add Rack >= 3.0 as a dependency
+* Dropped support for Ruby < 2.4 to match Rack
+* Replace Travis CI with GitHub Actions
+* Add frozen_string_literal to all files
+* Remove guard gem
+
 ## v1.0.0
 
 * Dropped support for Ruby < 2.3
@@ -36,4 +44,4 @@
 
 ## v0.1.0
 
-Broken.
+* Broken.

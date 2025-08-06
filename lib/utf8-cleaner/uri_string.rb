@@ -6,8 +6,8 @@ module UTF8Cleaner
     attr_accessor :data
 
     HEX_CHARS = '0-9a-fA-F'
-    HEX_CHARS_REGEX = /[#{HEX_CHARS}]/
-    INVALID_PERCENT_ENCODING_REGEX = /%(?![#{HEX_CHARS}]{2})/
+    HEX_CHARS_REGEX = /[#{HEX_CHARS}]/.freeze
+    INVALID_PERCENT_ENCODING_REGEX = /%(?![#{HEX_CHARS}]{2})/.freeze
 
     def initialize(data)
       self.data = data
@@ -34,7 +34,7 @@ module UTF8Cleaner
       char_array = []
       index = 0
 
-      while index < data.length do
+      while index < data.length
         char = data[index]
 
         if char == '%'
@@ -43,20 +43,20 @@ module UTF8Cleaner
           skip_next = 2
 
           # If the next character is not a hex char, drop the percent and it
-          unless data[index + 1] =~ HEX_CHARS_REGEX
+          unless HEX_CHARS_REGEX.match?(data[index + 1])
             index += 2
             next
           end
 
           # If the character after that is not a hex char, drop the percent and
           # both of the following chars.
-          unless data[index + 2] =~ HEX_CHARS_REGEX
+          unless HEX_CHARS_REGEX.match?(data[index + 2])
             index += 3
             next
           end
 
           # How long is this character?
-          first_byte = '0x' + (data[index + 1] + data[index + 2]).upcase
+          first_byte = "0x#{(data[index + 1] + data[index + 2]).upcase}"
           bytes = utf8_char_length_in_bytes(first_byte)
 
           # Grab the specified number of encoded bytes
@@ -74,7 +74,7 @@ module UTF8Cleaner
 
               # If we're dealing with a multibyte character, skip more than two
               # of the next characters, which have already been processed.
-              skip_next = bytes * 3 - 1
+              skip_next = (bytes * 3) - 1
             end
           end
           index += skip_next
@@ -92,9 +92,8 @@ module UTF8Cleaner
       URI::DEFAULT_PARSER.unescape(string).force_encoding('UTF-8').valid_encoding? &&
         string !~ INVALID_PERCENT_ENCODING_REGEX
     rescue ArgumentError => e
-      if e.message =~ /invalid byte sequence/
-        return false
-      end
+      return false if e.message.include?('invalid byte sequence')
+
       raise e
     end
 
@@ -103,16 +102,13 @@ module UTF8Cleaner
     def next_n_bytes_from(index, num_bytes)
       return [] if data.length < index + (3 * num_bytes)
 
-      num_bytes.times.map do |n|
+      Array.new(num_bytes) do |n|
         # Look for percent signs in the right places
         pct_index = index + (3 * n)
-        if data[pct_index] == '%'
-          byte = data[pct_index + 1..pct_index + 2]
-        else
-          # An expected percent sign was missing. The whole character is invalid.
-          return []
-        end
-        '%' + byte
+        return [] unless data[pct_index] == '%'
+
+        # An expected percent sign was missing. The whole character is invalid.
+        "%#{data[(pct_index + 1)..(pct_index + 2)]}"
       end
     end
 

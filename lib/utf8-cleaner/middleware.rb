@@ -3,6 +3,8 @@
 require 'active_support/multibyte/unicode'
 
 module UTF8Cleaner
+  # Rack middleware to sanitize non-UTF8 chars in
+  # environment variables and request input.
   class Middleware
     SANITIZE_ENV_KEYS = %w[
       http_referer
@@ -36,6 +38,7 @@ module UTF8Cleaner
     def sanitize_env_keys(env)
       SANITIZE_ENV_KEYS.each do |key|
         next unless (value = env[key])
+
         env[key] = cleaned_string(value)
       end
     end
@@ -58,10 +61,10 @@ module UTF8Cleaner
         return unless input_data && !input_data.ascii_only?
 
         env['rack.input'] = StringIO.new(tidy_bytes(input_data))
-      else
-        # Do not process multipart/form-data since it may contain binary content.
-        # Leave all other unknown content types alone.
       end
+      # Else:
+      # - Do not process multipart/form-data since it may contain binary content.
+      # - Leave all other unknown content types alone.
     end
 
     def read_input(input)

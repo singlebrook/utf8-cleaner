@@ -2,6 +2,7 @@
 
 source 'https://rubygems.org'
 
+gem 'rack-test'
 gem 'rake'
 gem 'rspec'
 gem 'rubocop', '< 1.13.0'

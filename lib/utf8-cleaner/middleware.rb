@@ -7,13 +7,13 @@ module UTF8Cleaner
   # environment variables and request input.
   class Middleware
     SANITIZE_ENV_KEYS = %w[
-      http_referer
-      http_user_agent
-      path_info
-      query_string
-      request_path
-      request_uri
-      http_cookie
+      HTTP_REFERER
+      HTTP_USER_AGENT
+      PATH_INFO
+      QUERY_STRING
+      REQUEST_PATH
+      REQUEST_URI
+      HTTP_COOKIE
     ].freeze
 
     def initialize(app)
@@ -46,7 +46,7 @@ module UTF8Cleaner
     def sanitize_env_rack_input(env)
       return unless env['rack.input']
 
-      case env['content_type']
+      case env['CONTENT_TYPE']
       when %r{\Aapplication/x-www-form-urlencoded}i
         # This data gets the full cleaning treatment
         input_data = read_input(env['rack.input'])

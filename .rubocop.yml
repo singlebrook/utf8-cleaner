@@ -1,9 +1,8 @@
-#inherit_from: .rubocop_todo.yml
-
-plugins:
-  - rubocop-performance
-  - rubocop-rake
-  - rubocop-rspec
+# TODO: Enable plugins when upgrading to Rubocop
+# plugins:
+#   - rubocop-performance
+#   - rubocop-rake
+#   - rubocop-rspec
 
 AllCops:
   TargetRubyVersion: 2.4
@@ -17,6 +16,9 @@ Layout/LineLength:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/BlockLength:
+  Enabled: false
+
 Metrics/BlockNesting:
   Enabled: false
 
@@ -27,11 +29,14 @@ Naming/FileName:
   Exclude:
     - 'lib/utf8-cleaner.rb'
 
-RSpec/IndexedLet:
+Style/AsciiComments:
   Enabled: false
 
-RSpec/MessageSpies:
-  EnforcedStyle: receive
-
-RSpec/MultipleMemoizedHelpers:
-  Enabled: false
+# RSpec/IndexedLet:
+#   Enabled: false
+#
+# RSpec/MessageSpies:
+#   EnforcedStyle: receive
+#
+# RSpec/MultipleMemoizedHelpers:
+#   Enabled: false

@@ -1,4 +1,5 @@
-# encoding: UTF-8
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module UTF8Cleaner
@@ -8,8 +9,10 @@ module UTF8Cleaner
     let(:ascii_string)     { URIString.new('foo') }
     let(:encoded_string)   { URIString.new('%26') }
     let(:multibyte_string) { URIString.new('%E2%9C%93') }
-    let(:complex_invalid_string) { URIString.new('foo/%FFbar%2e%2fbaz%26%3B%E2%9C%93%E2%9Cbaz') }
-                                                # foo/   bar.  /  baz&  ;  √              baz
+    let(:complex_invalid_string) do
+      # ------------ foo/   bar.  /  baz&  ;  √              baz
+      URIString.new('foo/%FFbar%2e%2fbaz%26%3B%E2%9C%93%E2%9Cbaz')
+    end
     let(:no_byte_at_all)      { URIString.new('%') }
     let(:not_even_hex_chars1) { URIString.new('%x') }
     let(:not_even_hex_chars2) { URIString.new('%0zhey') }
@@ -35,7 +38,6 @@ module UTF8Cleaner
       it { expect(ascii_string).to be_valid }
       it { expect(encoded_string).to be_valid }
       it { expect(multibyte_string).to be_valid }
-
       it { expect(invalid_string).to_not be_valid }
       it { expect(complex_invalid_string).to_not be_valid }
       it { expect(no_byte_at_all).to_not be_valid }
@@ -43,7 +45,5 @@ module UTF8Cleaner
       it { expect(not_even_hex_chars2).to_not be_valid }
       it { expect(mixed_encodings).to_not be_valid }
     end
-
   end
-
 end

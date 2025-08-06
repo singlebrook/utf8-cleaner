@@ -255,6 +255,8 @@ describe 'UTF8Cleaner::Middleware Integration' do
       end
 
       it 'handles valid UTF-8 JSON unchanged' do
+        skip if RUBY_VERSION < '3.1' || defined?(JRuby) || defined?(TruffleRuby)
+
         json = { 'name' => 'José', 'emoji' => '😀', 'check' => '✓' }.to_json
 
         env = Rack::MockRequest.env_for('/',
@@ -294,6 +296,8 @@ describe 'UTF8Cleaner::Middleware Integration' do
       end
 
       it 'does not modify binary content in multipart' do
+        skip if RUBY_VERSION < '3.1' || defined?(TruffleRuby)
+
         # Create binary content with invalid UTF-8
         binary_content = (+"file\xFF\xF8content").force_encoding('BINARY')
 

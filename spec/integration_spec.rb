@@ -219,7 +219,7 @@ describe 'UTF8Cleaner::Middleware Integration' do
 
     context 'with JSON data' do
       it 'tidies invalid UTF-8 bytes in JSON' do
-        pending 'This case is not currently handled correctly'
+        pending 'This case is not currently handled correctly' unless defined?(TruffleRuby)
 
         # Create JSON with invalid UTF-8 bytes
         json_with_invalid = "{\"name\": \"test\xFF\xF8\", \"valid\": \"✓\"}"

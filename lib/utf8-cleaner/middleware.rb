@@ -27,7 +27,6 @@ module UTF8Cleaner
     include ActiveSupport::Multibyte::Unicode
 
     def sanitize_env(env)
-      env = env.dup # Do not mutate the original
       sanitize_env_keys(env)
       sanitize_env_rack_input(env)
       env

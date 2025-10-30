@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.4'
 
   gem.add_dependency 'activesupport'
-  gem.add_dependency 'rack', '>= 3.0'
+  gem.add_dependency 'rack', '~> 3.0'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'

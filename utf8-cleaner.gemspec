@@ -5,8 +5,8 @@ require_relative 'lib/utf8-cleaner/version'
 Gem::Specification.new do |gem|
   gem.name          = 'utf8-cleaner'
   gem.version       = UTF8Cleaner::VERSION
-  gem.authors       = ['Leon Miller-Out']
-  gem.email         = ['leon@singlebrook.com']
+  gem.authors       = ['Leon Miller-Out', 'Shane Cavanaugh']
+  gem.email         = ['leon@singlebrook.com', 'shane@shanecav.net']
   gem.description   = %q{Rack middleware to remove invalid UTF8 characters from web requests.}
   gem.summary       = %q{Prevent annoying 'invalid byte sequence in UTF-8' errors}
   gem.homepage      = 'https://github.com/singlebrook/utf8-cleaner'

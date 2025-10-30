@@ -1,26 +1,22 @@
 # UTF8Cleaner
 
-Removes invalid UTF-8 characters from the environment so that your app doesn't choke
-on them. This prevents errors like "invalid byte sequence in UTF-8".
+Rack middleware to remove invalid UTF-8 characters from the environment so that your
+app doesn't choke them. Prevents errors like "invalid byte sequence in UTF-8".
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add this line to your application's `Gemfile`:
 
-    gem 'utf8-cleaner'
+```ruby
+gem 'utf8-cleaner'
+```
 
-And then execute:
+If you're not running Rails, you'll have to add the middleware to your `config.ru`:
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install utf8-cleaner
-
-If you're not running Rails, you'll have to add the middleware to your config.ru:
-
-    require 'utf8-cleaner'
-    use UTF8Cleaner::Middleware
+```ruby
+require 'utf8-cleaner'
+use UTF8Cleaner::Middleware
+```
 
 ## Usage
 
@@ -36,10 +32,10 @@ There's nothing to "use". It just works!
 
 ## Credits
 
-Original middleware author: @phoet - https://gist.github.com/phoet/1336754
-
+* Original middleware author: @phoet - https://gist.github.com/phoet/1336754
 * Ruby 1.9.3 compatibility: @pithyless - https://gist.github.com/pithyless/3639014
 * Code review and cleanup: @nextmat
 * POST body sanitization: @salrepe
 * Bug fixes: @cosine
 * Rails 5 deprecation fix: @benlovell
+* Rack 3 support: @johnnyshields

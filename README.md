@@ -1,7 +1,7 @@
 # UTF8Cleaner
 
 Rack middleware to remove invalid UTF-8 characters from the environment so that your
-app doesn't choke them. Prevents errors like "invalid byte sequence in UTF-8".
+app doesn't choke on them. Prevents errors like "invalid byte sequence in UTF-8".
 
 ## Installation
 

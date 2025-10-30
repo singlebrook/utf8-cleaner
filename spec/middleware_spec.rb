@@ -39,8 +39,6 @@ module UTF8Cleaner
       end
 
       describe "when rack.input is wrapped" do
-        # rack.input responds only to methods gets, each, rewind, read and close
-        # Rack::Lint::InputWrapper is the class which servers wrappers are based on
         it "removes invalid UTF-8 sequences" do
           wrapped_rack_input = Rack::Lint::Wrapper::InputWrapper.new(StringIO.new("foo=%FFbar%F8"))
           env.merge!('rack.input' => wrapped_rack_input)

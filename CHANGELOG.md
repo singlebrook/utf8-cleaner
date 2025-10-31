@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## v2.0.1
+
+* Remove `env.dup` that was added in v2.0.0, because it broke some controller specs in some Rails apps. 
+
 ## v2.0.0
 
 * Support Rack 3 and add Rack >= 3.0 as a dependency
